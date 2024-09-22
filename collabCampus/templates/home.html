@@ -1,8 +1,38 @@
 {% extends 'base.html' %}
+
 {% block content %}
-    {% if user.is_authenticated %}
-    <h1>Home Page -- implement (Logged In) </h1>
-    {% else %}
-    <h1>Home Page -- implement (Not Logged In) </h1>
-    {% endif %}
+    <div class="container mt-5">
+        {% if user.is_authenticated %}
+            {% if projects %}
+                <h1 class="text-center mb-4">GROUPS AND PROJECTS</h1>
+                <div class="row">
+                    {% for project in projects %}
+                        <div class="col-12 mb-4 d-flex align-items-center p-5 border bg-light shadow-lg hover-shadow rounded">
+                            <!-- Image or Random Color Placeholder -->
+                            <div class="project-image" style="width: 200px; height: 150px; flex-shrink: 0;">
+                                {% if project.image %}
+                                    <img src="{{ project.image.url }}" alt="Project Image" class="img-fluid" style="max-height: 150px;">
+                                {% else %}
+                                    <div style="background-color: rgb(110, 101, 90); width: 200px; height: 150px;"></div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Project Details -->
+                            <div class="project-details ms-4">
+                                <h2>{{ project.title }}</h2>
+                                <p>{{ project.description }}</p>
+                                <p class="text-muted small">Created on: {{ project.created_at|date:"M d, Y" }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <h2>No Projects Found</h2>
+            {% endif %}
+        {% else %}
+            <div class="text-center mt-5">
+                {% include 'mainPage.html'  %}
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

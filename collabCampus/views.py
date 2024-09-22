@@ -3,10 +3,14 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import SignUpForm
+from .models import Project
 
 # Create your views here.
 def Home(request):
-    return render(request,'home.html')
+    projects = Project.objects.all()
+    return render(request,'home.html',{
+        'projects': projects
+    })
 
 def login_user(request):
     # CHECK TO SEE IF LOGGING IN 
