@@ -5,6 +5,7 @@ from django.contrib import messages
 from .forms import SignUpForm
 from .models import Project
 import pickle as pk
+from django.contrib.auth.models import User
 
 # Create your views here.
 # ALL THE AUTHENTICATION IS DONE HERE 
@@ -66,3 +67,28 @@ def project_desc(request,pk):
         })
     else:
         return render(request,'login.html')
+
+def user_profile(request, user_id):
+    user = User.objects.get(id=user_id)
+    projects = Project.objects.filter(owner=user)  # Get all projects owned by the user
+    context = {
+        'user_profile': user.profile,
+        'projects': projects,
+        'user': user
+    }
+    return render(request, 'profile.html', context)
+
+
+def delete_post(request,pk):
+    if request.user.is_authenticated:
+        project = Project.objects.get(id=pk)
+        if request.user == project.owner:
+            project.delete()
+            messages.success(request, "Project deleted successfully")
+            return redirect('home')
+        else:
+            messages.error(request, "You are not authorized to delete this project")
+            return redirect('home')
+        
+
+

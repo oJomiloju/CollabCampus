@@ -3,16 +3,57 @@
 {% block content %}
     <div class="container mt-5">
         <div class="row">
-            <div class="col-md-8 offset-md-2">
+            <div class="col-md-8 offset-md-2 text-center">
+                <!-- Project Title -->
                 <h1>{{ project.title }}</h1>
+
+                <!-- Project Image (centered and larger) -->
                 {% if project.image %}
-                    <img src="{{ project.image.url }}" alt="Project Image" class="img-fluid" style="max-height: 150px;">
+                    <img src="{{ project.image.url }}" alt="Project Image" class="img-fluid my-4" style="max-height: 400px;">
                 {% else %}
-                    <div style="background-color: rgb(110, 101, 90); width: 200px; height: 150px;"></div>
+                    <div style="background-color: rgb(110, 101, 90); width: 100%; height: 400px;" class="my-4"></div>
                 {% endif %}
-                <p>{{ project.description }}</p>
+
+                <!-- Project Description -->
+                <p class="mt-4">{{ project.description }}</p>
+
+                <!-- Created Date -->
                 <p class="text-muted">Created on: {{ project.created_at|date:"M d, Y" }}</p>
-                <!-- Add more project details here -->
+
+                <!-- Owner Information -->
+                <div class="mt-4 d-flex justify-content-center align-items-center flex-column">
+                    <h5>Project Owner: {{ project.owner.username }}</h5>
+                    {% if project.owner.profile.profile_pic %}
+                        <img src="{{ project.owner.profile.profile_pic.url }}" alt="Owner's Profile Picture" class="rounded-circle my-3" style="width: 100px; height: 100px;">
+                    {% else %}
+                        <div style="background-color: rgb(110, 101, 90); width: 100px; height: 100px;" class="rounded-circle my-3"></div>
+                    {% endif %}
+                </div>
+
+                <!-- Comments Section -->
+                <div class="mt-5">
+                    <h4>Comments</h4>
+                    <div class="card">
+                        <div class="card-body">
+                            {% if project.comments.all %}
+                                <ul class="list-unstyled">
+                                    {% for comment in project.comments.all %}
+                                        <li class="mb-3">
+                                            <strong>{{ comment.user.username }}</strong>:
+                                            <p>{{ comment.content }}</p>
+                                            <small class="text-muted">{{ comment.created_at|date:"M d, Y H:i" }}</small>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>No comments yet. Be the first to comment!</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    
+                <!-- Back Button -->
+                <a href="{% url 'home' %}" class="btn btn-secondary mt-4">Back</a>
             </div>
         </div>
     </div>
