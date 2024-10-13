@@ -4,8 +4,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import SignUpForm
 from .models import Project
+import pickle as pk
 
 # Create your views here.
+# ALL THE AUTHENTICATION IS DONE HERE 
 def Home(request):
     projects = Project.objects.all()
     return render(request,'home.html',{
@@ -54,3 +56,13 @@ def register_user(request):
     return render(request,'register.html',{
               'form': form
          })
+
+# More of the Conceptual Views 
+def project_desc(request,pk):
+    if request.user.is_authenticated:
+        project = Project.objects.get(id=pk)
+        return render(request,'project.html',{
+            'project': project
+        })
+    else:
+        return render(request,'login.html')
